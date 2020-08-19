@@ -424,7 +424,7 @@ public class WebSocketServer {
 
     private static final Object object = new Object();
 
-    // 给不同设备发送消息
+
     private void sendMsg(UserBean userBean, int device, String str) {
         if (device == 0) {
             Session phoneSession = userBean.getPhoneSession();
@@ -436,15 +436,48 @@ public class WebSocketServer {
         } else if (device == 1) {
             Session pcSession = userBean.getPcSession();
             if (pcSession != null) {
-                synchronized (object) {
-                    pcSession.getAsyncRemote().sendText(str);
+                try{
+                    synchronized (object) {
+                        pcSession.getAsyncRemote().sendText(str);
+                    }
+                }catch (Exception e){
+                    System.out.println("err1------------------------");
+                    e.fillInStackTrace();
+                    System.out.println("err1------------------------");
+                    try{
+                        synchronized (object) {
+                            pcSession.getAsyncRemote().sendText(str);
+                        }
+                    }catch (Exception e3){
+                        System.out.println("err2------------------------");
+                        e3.fillInStackTrace();
+                        System.out.println("err2------------------------");
+                    }
                 }
             }
         } else {
             Session phoneSession = userBean.getPhoneSession();
             if (phoneSession != null) {
-                synchronized (object) {
-                    phoneSession.getAsyncRemote().sendText(str);
+
+                try{
+                    synchronized (object) {
+
+                        phoneSession.getAsyncRemote().sendText(str);
+                    }
+                }catch (Exception e){
+                    System.out.println("err3------------------------");
+                    e.fillInStackTrace();
+                    System.out.println("err3------------------------");
+                    try{
+                        synchronized (object) {
+
+                            phoneSession.getAsyncRemote().sendText(str);
+                        }
+                    }catch (Exception e3){
+                        System.out.println("err4------------------------");
+                        e3.fillInStackTrace();
+                        System.out.println("err4------------------------");
+                    }
                 }
             }
             Session pcSession = userBean.getPcSession();
